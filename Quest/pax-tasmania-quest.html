@@ -192,6 +192,17 @@
     body.play-mode #party .pmem{width:30px;height:30px;border-radius:7px;}
     body.play-mode #party .pmem .crown{font-size:9px;top:-7px;}
   }
+  .dev-boss-btn{
+    position:fixed;z-index:500;right:10px;
+    bottom:max(152px,calc(146px + env(safe-area-inset-bottom)));
+    background:#5a1a1a;border:2px solid #ff8a80;color:#ffe8e8;
+    border-radius:10px;padding:8px 11px;font-size:11px;font-weight:700;
+    font-family:inherit;cursor:pointer;box-shadow:0 4px 14px #0009;
+    touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+  }
+  .dev-boss-btn:active{transform:scale(0.97);opacity:.92;}
+  @media (min-width:641px){.dev-boss-btn{display:none !important;}}
+
   @media (max-width:380px){
     #charselect .pick{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
     #charselect .pc img{width:52px;height:52px;}
@@ -211,6 +222,8 @@
     <button class="pill" id="bLang">EN</button>
     <button class="pill" id="bSnd">🔇</button>
   </div>
+
+  <button class="dev-boss-btn hidden" id="devBossBtn" type="button" aria-label="ラスボステスト">👹 ラスボス</button>
 
   <div class="wrap">
     <canvas id="cv" width="608" height="464"></canvas>
@@ -2625,6 +2638,7 @@ const promptEl=document.getElementById('prompt'),modeselectEl=document.getElemen
   padEl=document.getElementById('pad'),partyEl=document.getElementById('party'),hintEl=document.getElementById('hint'),
   cntWrap=document.getElementById('cntWrap'),bagWrap=document.getElementById('bagWrap'),bJournal=document.getElementById('bJournal'),bMode=document.getElementById('bMode'),
   jrnl=document.getElementById('journal');
+  devBossBtn=document.getElementById('devBossBtn');
 function dialogOverlayOn(){return overlay==='dialog'||overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'||overlay==='quitmenu';}
 function applyUI(){
   promptEl.classList.add('hidden');modeselectEl.classList.add('hidden');charselectEl.classList.add('hidden');
@@ -2655,6 +2669,7 @@ function applyUI(){
     if(!started){charselectEl.classList.remove('hidden');}
     else{padEl.classList.remove('hidden');partyEl.classList.remove('hidden');cntWrap.classList.remove('hidden');bagWrap.classList.remove('hidden');bJournal.classList.remove('hidden');
       hintEl.textContent=uiHint('hintField');hintEl.classList.remove('hidden');}}
+  if(devBossBtn)devBossBtn.classList.toggle('hidden',!(DEV_MODE&&isMobileUI()&&started&&(screen==='field'||screen==='place')&&!overlay));
   updateHudModeBtn();
   syncMusic();
 }
@@ -2865,6 +2880,11 @@ document.getElementById('bB').onclick=()=>uiConfirm();
 document.getElementById('bJ2').onclick=()=>{if(screen==='battle')return;if(overlay==='places')closePlaces();else if(screen==='field'||screen==='place')openPlacesMenu();};
 document.getElementById('jClose').onclick=closePlaces;
 bMode.onclick=askQuitToMenu;bJournal.onclick=()=>{if(overlay==='places')closePlaces();else if(screen==='field'||screen==='place')openPlacesMenu();};
+document.getElementById('devBossBtn').onclick=()=>{
+  if(!DEV_MODE||!started||(screen!=='field'&&screen!=='place'))return;
+  if(overlay==='places')closePlaces();else if(overlay)dismissDialog();
+  attemptLastBoss(true);
+};
 document.getElementById('msTitle').onclick=goTitle;
 promptEl.onclick=goModeSelect;
 ov.onclick=e=>{if(e.target===ov)dismissDialog();};
