@@ -2164,30 +2164,19 @@ function battleKey(e){
 let battleBtns=[];
 function battlePanelTop(mUI){return Math.floor(H*(mUI?0.68:0.78));}
 function drawBattleHeroStrip(py,mUI){
-  const stripH=mUI?38:28, hy=py+8;
+  const stripH=mUI?38:34, hy=py+8;
   ctx.fillStyle='#06101fdd';ctx.fillRect(10,hy,W-20,stripH);
   ctx.strokeStyle='#4a7098';ctx.lineWidth=1;ctx.strokeRect(10,hy,W-20,stripH);
   ctx.textAlign='left';ctx.textBaseline='alphabetic';
   const hpTxt='HP '+battle.hero.hp+'/'+battle.hero.max;
-  if(mUI){
-    ctx.fillStyle='#ffd24a';ctx.font=canvasLabelFont(12,'bold');
-    ctx.fillText(playerName,18,hy+15);
-    ctx.fillStyle='#cfe9ff';ctx.font=canvasLabelFont(10);
-    ctx.textAlign='right';ctx.fillText(hpTxt,W-18,hy+15);
-    ctx.textAlign='left';
-    const barY=hy+22, barW=W-36;
-    ctx.fillStyle='#321';ctx.fillRect(18,barY,barW,8);
-    ctx.fillStyle='#7be3a0';ctx.fillRect(18,barY,barW*Math.max(0,battle.hero.hp)/battle.hero.max,8);
-  }else{
-    ctx.fillStyle='#ffd24a';ctx.font=canvasLabelFont(13,'bold');
-    ctx.fillText(playerName,18,hy+18);
-    ctx.fillStyle='#cfe9ff';ctx.font=canvasLabelFont(11);
-    const barX=Math.min(W-130,Math.max(108,18+ctx.measureText(playerName).width+14));
-    ctx.fillText(hpTxt,barX,hy+18);
-    const barY=hy+20, barW=W-20-barX;
-    ctx.fillStyle='#321';ctx.fillRect(barX,barY,barW,8);
-    ctx.fillStyle='#7be3a0';ctx.fillRect(barX,barY,barW*Math.max(0,battle.hero.hp)/battle.hero.max,8);
-  }
+  const nameY=hy+(mUI?15:16), barY=hy+(mUI?22:23), barW=W-36;
+  ctx.fillStyle='#ffd24a';ctx.font=canvasLabelFont(mUI?12:13,'bold');
+  ctx.fillText(playerName,18,nameY);
+  ctx.fillStyle='#cfe9ff';ctx.font=canvasLabelFont(mUI?10:11);
+  ctx.textAlign='right';ctx.fillText(hpTxt,W-18,nameY);
+  ctx.textAlign='left';
+  ctx.fillStyle='#321';ctx.fillRect(18,barY,barW,8);
+  ctx.fillStyle='#7be3a0';ctx.fillRect(18,barY,barW*Math.max(0,battle.hero.hp)/battle.hero.max,8);
   return hy+stripH+6;
 }
 function renderBattle(){
@@ -2247,12 +2236,21 @@ function renderBattle(){
     const items=battle.phase==='submenu'?ownedFoods():getMainCmds(), sel=battle.phase==='submenu'?battle.foodSel:battle.sel;
     const cols=battle.phase==='submenu'?Math.max(1,Math.min(5,items.length)):3, cw=(W-36)/cols, rh=mUI?34:30, ox0=18;
     const toastLine=(battle.toastUntil&&timeMS<battle.toastUntil)?battle.toast:(battle.introUntil&&timeMS<battle.introUntil?battle.intro:'');
-    let msgY=contentTop+4;
-    if(toastLine){ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=canvasLabelFont(mUI?13:14);wrapText(toastLine,14,msgY,W-28,mUI?17:19,false);msgY+=mUI?22:26;}
-    if(battle.phase==='menu'&&timeMS>=battle.introUntil&&!battle.fleeing&&!toastLine){
-      ctx.fillStyle='#ff8a80';ctx.font=canvasLabelFont(mUI?10:11);ctx.textAlign='left';ctx.fillText(t('battleCornered'),14,msgY);msgY+=mUI?14:16;
+    let oy0;
+    if(mUI){
+      let msgY=contentTop+4;
+      if(toastLine){ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=canvasLabelFont(13);wrapText(toastLine,14,msgY,W-28,17,false);msgY+=22;}
+      else if(battle.phase==='menu'&&timeMS>=battle.introUntil&&!battle.fleeing){
+        ctx.fillStyle='#ff8a80';ctx.font=canvasLabelFont(10);ctx.textAlign='left';ctx.fillText(t('battleCornered'),14,msgY);msgY+=14;
+      }
+      oy0=msgY+6;
+    }else{
+      oy0=contentTop+(toastLine?24:8);
+      if(toastLine){ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=canvasLabelFont(14);wrapText(toastLine,14,contentTop+4,W-28,19,false);}
+      else if(battle.phase==='menu'&&timeMS>=battle.introUntil&&!battle.fleeing){
+        ctx.fillStyle='#ff8a80';ctx.font=canvasLabelFont(11);ctx.textAlign='left';ctx.fillText(t('battleCornered'),14,contentTop+4);
+      }
     }
-    const oy0=msgY+6;
     const atkWait=timeMS<battle.partyCd;
     const cmdFs=mUI?15:14;
     items.forEach((it,idx)=>{const cx=ox0+(idx%cols)*cw, cy=oy0+Math.floor(idx/cols)*rh;
