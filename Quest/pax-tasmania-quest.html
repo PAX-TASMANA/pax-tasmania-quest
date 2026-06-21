@@ -33,6 +33,8 @@
   #charselect{justify-content:flex-start;padding:10px 3.5% 18px;gap:6px;}
   .s2title{font-size:17px;color:var(--accent);text-shadow:0 2px 0 #0008;letter-spacing:1px}
   .ms-btns{display:flex;gap:10px;justify-content:center;width:100%;max-width:440px}
+  .ms-title-back{margin-top:6px;background:#13335e;border:2px solid var(--border);color:#cfe9ff;border-radius:10px;padding:9px 18px;font-size:13px;cursor:pointer;font-family:inherit}
+  .ms-title-back:hover{background:#1c4a86}
   .ms-btn{flex:1 1 0;min-width:0;max-width:210px;background:#0b2342;border:3px solid var(--border);border-radius:14px;padding:12px 8px;cursor:pointer;font-family:inherit;color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.1s}
   .ms-btn:hover{background:#15406f;transform:translateY(-2px)}
   .ms-btn .ic{font-size:26px}.ms-btn .ms-name{font-size:15px;font-weight:700;color:var(--accent)}.ms-btn .ms-sub{font-size:11px;opacity:.88;line-height:1.45;word-break:keep-all;overflow-wrap:normal}
@@ -220,6 +222,7 @@
         <button class="ms-btn" id="msQuest"><span class="ic">⚔️</span><b class="ms-name">クエストモード</b><span class="ms-sub">16か所の名所を冒険</span></button>
       </div>
       <div class="parade" id="msParade"></div>
+      <button class="ms-title-back" id="msTitle" type="button">◀ タイトルにもどる</button>
     </div>
 
     <div id="charselect" class="screen2 hidden">
@@ -300,16 +303,18 @@ const STR={
   modeTitle:'どう あそぶ？',modeMap:'マップモード',modeMapSub:'タスマニアの情報を見る',modeQuest:'クエストモード',modeQuestSub:'16か所の名所を冒険',
   csTitle:'旅の メンバーを えらぼう',csName:'名前:',csHero:'★ 主人公（1人）',csMate:'なかま（タップで ON/OFF・最大8人・計9人で出発）',csBack:'もどる',csStart:'旅に出る',
   csSummary:'主人公: {hero} ／ なかま {mates}人（計 {total} 人）',
-  hudJournal:'📖 名所・移動',hudMode:'≡ モード',langBtn:'EN',
+  hudJournal:'📖 名所・移動',hudMode:'≡ メニュー',hudQuit:'≡ やめる',langBtn:'EN',
+  quitMenuTitle:'やめる？',quitMenuBody:'冒険の途中データは保存されます。\nメニューにもどりますか？',quitMenuYes:'メニューへ',quitMenuNo:'続ける',
+  msTitleBack:'◀ タイトルにもどる',
   bA:'決定',bBTitle:'調べる',
   dialogClose:'とじる',dialogMorePick:'ボタンで 選んでね',dialogMoreDismiss:'クリック または とじる',dialogLink:'🔗 くわしく見る（Discover Tasmania）',
   dialogFeed:'🍖 エサをあげる',dialogCancel:'やめる',dialogBossYes:'⚔️ 挑む',dialogBossNo:'まだ いい',dialogFerryYes:'🚢 船に乗る',
   placesTitle:'📖 名所・移動',placesSub:'16の名所を めぐろう',placesSubWarp:'🌀 名所ワープ（離島は港の🚢で海をわたる）',placesClose:'とじる',placesWarp:'🌀 移動',placesInfo:'🔗 情報',placesUnvisited:'未訪問',placesBase:'🏠 拠点',
   keysFooter:'移動: ▲▼◀▶ または 画面クリック ・ Return/Space: 決定・調べる ・ 📖: 名所・移動',
-  hintField:'クリックで移動 ・ 離島は灰色の港で船旅 ・ Return/Space=調べる ・ 📖=名所',
-  hintFieldMob:'タップで移動 ・ 決定=調べる ・ 📖=名所',
-  hintBattle:'コマンドをクリック ・ ▲▼=選択 ・ Return/Space=決定',
-  hintBattleMob:'コマンドをタップ ・ ▲▼=選択 ・ 決定ボタン',
+  hintField:'クリックで移動 ・ ≡=やめる ・ 決定=調べる ・ 📖=名所',
+  hintFieldMob:'タップで移動 ・ ≡=やめる ・ 決定=調べる ・ 📖=名所',
+  hintBattle:'コマンドをタップ ・ ▲▼=選択 ・ ≡=やめる',
+  hintBattleMob:'コマンドをタップ ・ ▲▼=選択 ・ ≡=やめる',
   hintPlace:'▲▼◀▶=選択 ・ Return/Space=決定 ・ Esc=出る',
   hintPlaceMob:'▲▼=選択 ・ 決定ボタン ・ Esc=出る',
   bagTitle:'エサ袋',bagSub:'Food Bag',bagEmpty:'まだ エサを 持っていない。\n魔物を たおすと エサを 落とすよ。\n魚は 《{mob}》などが 落とす（スタンリー方面の浜付近にも 出やすい）。',
@@ -365,16 +370,18 @@ const STR={
   modeTitle:'How do you want to play?',modeMap:'Map Mode',modeMapSub:'Browse Tasmania info',modeQuest:'Quest Mode',modeQuestSub:'Adventure to 16 landmarks',
   csTitle:'Choose Your Travel Party',csName:'Name:',csHero:'★ Hero (1)',csMate:'Mates (tap ON/OFF · up to 8 · 9 total to depart)',csBack:'Back',csStart:'Set Off',
   csSummary:'Hero: {hero} / Mates {mates} (total {total})',
-  hudJournal:'📖 Places · Travel',hudMode:'≡ Mode',langBtn:'JP',
+  hudJournal:'📖 Places · Travel',hudMode:'≡ Menu',hudQuit:'≡ Quit',langBtn:'JP',
+  quitMenuTitle:'Quit?',quitMenuBody:'Your progress is saved.\nReturn to the menu?',quitMenuYes:'Menu',quitMenuNo:'Keep playing',
+  msTitleBack:'◀ Back to title',
   bA:'OK',bBTitle:'Search',
   dialogClose:'Close',dialogMorePick:'Choose with buttons',dialogMoreDismiss:'Click or close',dialogLink:'🔗 Learn more (Discover Tasmania)',
   dialogFeed:'🍖 Give food',dialogCancel:'Cancel',dialogBossYes:'⚔️ Fight',dialogBossNo:'Not yet',dialogFerryYes:'🚢 Board',
   placesTitle:'📖 Places · Travel',placesSub:'Visit all 16 landmarks',placesSubWarp:'🌀 Warp to landmarks (islands via 🚢 at grey ports)',placesClose:'Close',placesWarp:'🌀 Go',placesInfo:'🔗 Info',placesUnvisited:'Not visited',placesBase:'🏠 Base',
   keysFooter:'Move: ▲▼◀▶ or click screen · Return/Space: OK/Search · 📖: Places',
-  hintField:'Click to move · grey ports sail to islands · Return/Space=Search · 📖=Places',
-  hintFieldMob:'Tap to move · OK=Search · 📖=Places',
-  hintBattle:'Click commands · ▲▼=select · Return/Space=OK',
-  hintBattleMob:'Tap commands · ▲▼=select · OK button',
+  hintField:'Click to move · ≡=quit · OK=Search · 📖=Places',
+  hintFieldMob:'Tap to move · ≡=quit · OK=Search · 📖=Places',
+  hintBattle:'Tap commands · ▲▼=select · ≡=quit',
+  hintBattleMob:'Tap commands · ▲▼=select · ≡=quit',
   hintPlace:'▲▼◀▶=select · Return/Space=OK · Esc=leave',
   hintPlaceMob:'▲▼=select · OK button · Esc=leave',
   bagTitle:'Food Bag',bagSub:'Food Bag',bagEmpty:'No food yet.\nDefeat monsters to collect food.\nFish drops from monsters like {mob} (common near Stanley beaches).',
@@ -498,7 +505,8 @@ function applyLang(){
     cs.querySelectorAll('.mateLbl')[0].textContent=t('csHero');cs.querySelectorAll('.mateLbl')[1].textContent=t('csMate');
     document.getElementById('csBack').textContent=t('csBack');document.getElementById('csStart').textContent=t('csStart');}
   if(document.getElementById('bJournal'))document.getElementById('bJournal').textContent=t('hudJournal');
-  if(document.getElementById('bMode'))document.getElementById('bMode').textContent=t('hudMode');
+  if(document.getElementById('bMode'))document.getElementById('bMode').textContent=started?t('hudQuit'):t('hudMode');
+  const msTitle=document.getElementById('msTitle');if(msTitle)msTitle.textContent=t('msTitleBack');
   document.getElementById('bA').textContent=t('bA');document.getElementById('bB').title=t('bBTitle');
   document.getElementById('dLink').textContent=t('dialogLink');
   document.getElementById('placesTitle').textContent=t('placesTitle');
@@ -2535,7 +2543,7 @@ const dName=document.getElementById('dName'),dEn=document.getElementById('dEn'),
 const dActions=document.getElementById('dActions'),dMoreTxt=document.getElementById('dMoreTxt'),dialogEl=document.querySelector('#ov .dialog');
 function setDialogActions(kind){
   dActions.innerHTML='';
-  dMoreTxt.textContent=(kind==='tame'||kind==='bossoffer'||kind==='ferryoffer')?t('dialogMorePick'):t('dialogMoreDismiss');
+  dMoreTxt.textContent=(kind==='tame'||kind==='bossoffer'||kind==='ferryoffer'||kind==='quitmenu')?t('dialogMorePick'):t('dialogMoreDismiss');
   if(kind==='tame'){
     const yes=document.createElement('button');yes.className='dact';yes.textContent=t('dialogFeed');
     yes.onclick=e=>{e.stopPropagation();doTame();};
@@ -2554,6 +2562,12 @@ function setDialogActions(kind){
     const no=document.createElement('button');no.className='dact ghost';no.textContent=t('dialogCancel');
     no.onclick=e=>{e.stopPropagation();cancelFerryOffer();};
     dActions.appendChild(yes);dActions.appendChild(no);
+  }else if(kind==='quitmenu'){
+    const yes=document.createElement('button');yes.className='dact';yes.textContent=t('quitMenuYes');
+    yes.onclick=e=>{e.stopPropagation();confirmQuitMenu();};
+    const no=document.createElement('button');no.className='dact ghost';no.textContent=t('quitMenuNo');
+    no.onclick=e=>{e.stopPropagation();closeDialog();};
+    dActions.appendChild(yes);dActions.appendChild(no);
   }else{
     const cl=document.createElement('button');cl.className='dact';cl.textContent=t('dialogClose');
     cl.onclick=e=>{e.stopPropagation();closeDialog();};
@@ -2569,11 +2583,23 @@ function openDialog(name,en,body,mei,portrait,url,actionKind='close',keepSnap){
   if(portrait){dPortWrap.style.display='';dPort.src=asset(portrait);dPortN.textContent=CHAR_BY_ID[portrait]?cName(portrait):'';}else dPortWrap.style.display='none';
   if(url){dLinkWrap.style.display='block';dLink.href=url;}else dLinkWrap.style.display='none';
   setDialogActions(actionKind);
-  ov.style.display='flex';ov.scrollTop=0;overlay=actionKind==='tame'?'tameoffer':actionKind==='bossoffer'?'bossoffer':actionKind==='ferryoffer'?'ferryoffer':'dialog';sfx(660,0.05);
+  ov.style.display='flex';ov.scrollTop=0;overlay=actionKind==='tame'?'tameoffer':actionKind==='bossoffer'?'bossoffer':actionKind==='ferryoffer'?'ferryoffer':actionKind==='quitmenu'?'quitmenu':'dialog';sfx(660,0.05);
   if(!keepSnap&&actionKind==='close')dialogSnap=null;
 }
 function closeDialog(){ov.style.display='none';overlay='';dialogSnap=null;}
-function dismissDialog(){if(overlay==='tameoffer')cancelTame();else if(overlay==='bossoffer')cancelBossOffer();else if(overlay==='ferryoffer')cancelFerryOffer();else if(overlay==='dialog')closeDialog();}
+function dismissDialog(){if(overlay==='tameoffer')cancelTame();else if(overlay==='bossoffer')cancelBossOffer();else if(overlay==='ferryoffer')cancelFerryOffer();else if(overlay==='quitmenu')closeDialog();else if(overlay==='dialog')closeDialog();}
+function canQuitToMenu(){return started&&(screen==='field'||screen==='battle'||screen==='place'||screen==='ferry'||screen==='ending');}
+function askQuitToMenu(){
+  if(!canQuitToMenu()){goModeSelect();return;}
+  openDialog(t('quitMenuTitle'),'',t('quitMenuBody'),'','',null,'quitmenu');
+  snapDialog({kind:'quitmenu'});
+}
+function confirmQuitMenu(){
+  closeDialog();battle=null;moveTarget=null;overlay='';curPlace=null;
+  if(player){player.moving=false;player.t=0;}
+  screen='modeselect';saveGameState(true);applyUI();syncMusic();
+}
+function updateHudModeBtn(){if(bMode)bMode.textContent=canQuitToMenu()?t('hudQuit'):t('hudMode');}
 
 // ===== place enter/exit =====
 function enterPlace(id){
@@ -2598,7 +2624,7 @@ const promptEl=document.getElementById('prompt'),modeselectEl=document.getElemen
   padEl=document.getElementById('pad'),partyEl=document.getElementById('party'),hintEl=document.getElementById('hint'),
   cntWrap=document.getElementById('cntWrap'),bagWrap=document.getElementById('bagWrap'),bJournal=document.getElementById('bJournal'),bMode=document.getElementById('bMode'),
   jrnl=document.getElementById('journal');
-function dialogOverlayOn(){return overlay==='dialog'||overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer';}
+function dialogOverlayOn(){return overlay==='dialog'||overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'||overlay==='quitmenu';}
 function applyUI(){
   promptEl.classList.add('hidden');modeselectEl.classList.add('hidden');charselectEl.classList.add('hidden');
   padEl.classList.add('hidden');partyEl.classList.add('hidden');hintEl.classList.add('hidden');
@@ -2613,21 +2639,22 @@ function applyUI(){
   else if(screen==='modeselect'){modeselectEl.classList.remove('hidden');}
   else if(screen==='mapmode'){bMode.classList.remove('hidden');cv.style.cursor='pointer';}
   else if(screen==='battle'){
-    padEl.classList.remove('hidden');bagWrap.classList.remove('hidden');
+    bMode.classList.remove('hidden');padEl.classList.remove('hidden');bagWrap.classList.remove('hidden');
     hintEl.textContent=uiHint('hintBattle');hintEl.classList.remove('hidden');cv.style.cursor='pointer';
   }
   else if(screen==='place'){
-    padEl.classList.remove('hidden');bagWrap.classList.remove('hidden');bJournal.classList.remove('hidden');
+    bMode.classList.remove('hidden');padEl.classList.remove('hidden');bagWrap.classList.remove('hidden');bJournal.classList.remove('hidden');
     if(isMobileUI()){hintEl.textContent=uiHint('hintPlace');hintEl.classList.remove('hidden');}
     cv.style.cursor='pointer';
   }
-  else if(screen==='ending'){cv.style.cursor='pointer';}
+  else if(screen==='ending'){bMode.classList.remove('hidden');cv.style.cursor='pointer';}
+  else if(screen==='ferry'){bMode.classList.remove('hidden');cv.style.cursor='default';}
   else if(screen==='field'){
     bMode.classList.remove('hidden');cv.style.cursor='pointer';
     if(!started){charselectEl.classList.remove('hidden');}
     else{padEl.classList.remove('hidden');partyEl.classList.remove('hidden');cntWrap.classList.remove('hidden');bagWrap.classList.remove('hidden');bJournal.classList.remove('hidden');
-      if(started){hintEl.textContent=uiHint('hintField');hintEl.classList.remove('hidden');}}}
-  else if(screen==='ferry'){cv.style.cursor='default';}
+      hintEl.textContent=uiHint('hintField');hintEl.classList.remove('hidden');}}
+  updateHudModeBtn();
   syncMusic();
 }
 function updateHUD(){document.getElementById('cnt').textContent=placesVisitedCount();document.getElementById('bagN').textContent=bagTotal();}
@@ -2664,7 +2691,7 @@ function confirm(){
     if(placeAt.has(key)){enterPlace(placeAt.get(key));return;}
     searchHere();}
 }
-function uiConfirm(){if(overlay==='dialog'||overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'){confirm();return;}if(screen==='battle'){battleConfirm();return;}if(screen==='place'){placeConfirm();return;}if(started&&screen==='field')confirm();}
+function uiConfirm(){if(overlay==='dialog'||overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'||overlay==='quitmenu'){confirm();return;}if(screen==='battle'){battleConfirm();return;}if(screen==='place'){placeConfirm();return;}if(started&&screen==='field')confirm();}
 
 // ===== audio =====
 let actx=null,audioOn=false,musicTimer=null,mi=0,musicKind='field';
@@ -2816,7 +2843,7 @@ window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();const okConfir
   if(screen==='battle'){e.preventDefault();battleKey(e);return;}
   if(screen==='ferry'){e.preventDefault();return;}
   if(!started){if(screen==='field'&&okConfirm){e.preventDefault();startQuest();}return;}
-  if(overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'||overlay==='dialog'){
+  if(overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'||overlay==='quitmenu'||overlay==='dialog'){
     if(k==='escape'){e.preventDefault();dismissDialog();}
     else if(okConfirm){e.preventDefault();confirm();}
     return;}
@@ -2836,12 +2863,13 @@ document.getElementById('bA').onclick=()=>uiConfirm();
 document.getElementById('bB').onclick=()=>uiConfirm();
 document.getElementById('bJ2').onclick=()=>{if(screen==='battle')return;if(overlay==='places')closePlaces();else if(screen==='field'||screen==='place')openPlacesMenu();};
 document.getElementById('jClose').onclick=closePlaces;
-bMode.onclick=goModeSelect;bJournal.onclick=()=>{if(overlay==='places')closePlaces();else if(screen==='field'||screen==='place')openPlacesMenu();};
+bMode.onclick=askQuitToMenu;bJournal.onclick=()=>{if(overlay==='places')closePlaces();else if(screen==='field'||screen==='place')openPlacesMenu();};
+document.getElementById('msTitle').onclick=goTitle;
 promptEl.onclick=goModeSelect;
 ov.onclick=e=>{if(e.target===ov)dismissDialog();};
 dialogEl.onclick=e=>{if(e.target.closest('a')||e.target.closest('.dact')||e.target.closest('#dLinkWrap'))return;if(overlay==='dialog')closeDialog();};
 cv.addEventListener('click',e=>{
-  if(overlay==='dialog'||overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'||overlay==='places')return;
+  if(overlay==='dialog'||overlay==='tameoffer'||overlay==='bossoffer'||overlay==='ferryoffer'||overlay==='quitmenu'||overlay==='places')return;
   const r=cv.getBoundingClientRect(),sx=(e.clientX-r.left)*(W/r.width),sy=(e.clientY-r.top)*(H/r.height),tp=touchHitPad();
   const hitBtn=(btns)=>btns.find(b=>sx>=b.x-tp&&sx<=b.x+b.w+tp&&sy>=b.y-tp&&sy<=b.y+b.h+tp);
   if(screen==='battle'){
