@@ -35,7 +35,7 @@
   .ms-btns{display:flex;gap:10px;justify-content:center;width:100%;max-width:440px}
   .ms-btn{flex:1 1 0;min-width:0;max-width:210px;background:#0b2342;border:3px solid var(--border);border-radius:14px;padding:12px 8px;cursor:pointer;font-family:inherit;color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;transition:.1s}
   .ms-btn:hover{background:#15406f;transform:translateY(-2px)}
-  .ms-btn .ic{font-size:26px}.ms-btn .ms-name{font-size:15px;font-weight:700;color:var(--accent)}.ms-btn .ms-sub{font-size:11px;opacity:.88;line-height:1.45}
+  .ms-btn .ic{font-size:26px}.ms-btn .ms-name{font-size:15px;font-weight:700;color:var(--accent)}.ms-btn .ms-sub{font-size:11px;opacity:.88;line-height:1.45;word-break:keep-all;overflow-wrap:normal}
   .parade{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-top:4px}
   .parade img{width:40px;height:40px;object-fit:contain}
   .cs-row{display:flex;gap:8px;align-items:center;justify-content:center;font-size:12px;flex-wrap:wrap}
@@ -139,6 +139,7 @@
     .ms-btns{flex-direction:column;max-width:min(320px,100%);gap:12px;}
     .ms-btn{max-width:none;width:100%;padding:16px 12px;min-height:72px;}
     .ms-btn .ms-name{font-size:16px;}
+    .ms-btn .ms-sub{font-size:12px;line-height:1.5;padding:0 6px;}
     .parade img{width:34px;height:34px;}
 
     #charselect .cs-row{font-size:13px;}
@@ -216,7 +217,7 @@
       <div class="s2title">どう あそぶ？</div>
       <div class="ms-btns">
         <button class="ms-btn" id="msMap"><span class="ic">🗺️</span><b class="ms-name">マップモード</b><span class="ms-sub">タスマニアの情報を見る</span></button>
-        <button class="ms-btn" id="msQuest"><span class="ic">⚔️</span><b class="ms-name">クエストモード</b><span class="ms-sub">16の名所を冒険する</span></button>
+        <button class="ms-btn" id="msQuest"><span class="ic">⚔️</span><b class="ms-name">クエストモード</b><span class="ms-sub">16か所の名所を冒険</span></button>
       </div>
       <div class="parade" id="msParade"></div>
     </div>
@@ -296,7 +297,7 @@ let lang=(function(){try{const s=localStorage.getItem('paxLang');return s==='en'
 const STR={
  ja:{
   prompt:'▶ クリックで はじめる',
-  modeTitle:'どう あそぶ？',modeMap:'マップモード',modeMapSub:'タスマニアの情報を見る',modeQuest:'クエストモード',modeQuestSub:'16の名所を冒険する',
+  modeTitle:'どう あそぶ？',modeMap:'マップモード',modeMapSub:'タスマニアの情報を見る',modeQuest:'クエストモード',modeQuestSub:'16か所の名所を冒険',
   csTitle:'旅の メンバーを えらぼう',csName:'名前:',csHero:'★ 主人公（1人）',csMate:'なかま（タップで ON/OFF・最大8人・計9人で出発）',csBack:'もどる',csStart:'旅に出る',
   csSummary:'主人公: {hero} ／ なかま {mates}人（計 {total} 人）',
   hudJournal:'📖 名所・移動',hudMode:'≡ モード',langBtn:'EN',
@@ -314,7 +315,7 @@ const STR={
   bagTitle:'エサ袋',bagSub:'Food Bag',bagEmpty:'まだ エサを 持っていない。\n魔物を たおすと エサを 落とすよ。\n魚は 《{mob}》などが 落とす（スタンリー方面の浜付近にも 出やすい）。',
   bagHint:'（正しいエサを その動物の生息地で あげると 仲間になる）',bagTotal:'合計 {n} 個',
   canvasExit:'でぐち',canvasBack:'もどる',placeBaseHdr:'（拠点・ビジターセンター）',placeOutdoorHdr:'（{kind}）',
-  placeCmdOwl:'🦉 フクロウに話しかける',placeCmdInfo:'📋 情報をゲットする',placeCmdExit:'🚪 出る',placePrompt:'どうする？',
+  placeCmdOwl:'🦉 フクロウに話しかける',placeCmdOwlMob:'🦉 フクロウ',placeCmdInfo:'📋 情報をゲットする',placeCmdInfoMob:'📋 情報',placeCmdExit:'🚪 出る',placeCmdExitMob:'🚪 出る',placePrompt:'どうする？',
   placeWelcomeShort:'デヴォンポート（拠点）に 到着した。\nフクロウに 話しかけるか、案内板で 情報を 読もう。',
   ending1:'みんな なかま だ。',ending2:'へいわな 美しい タスマニアに もどった。',ending3:'PAXを 仲間に 入れたい ひとは\nここで ゲット！',endingShop:'🛒 ここでゲット！',endingRetry:'🔄 もう一度 遊ぶ',
   owlName:'フクロウ',owlSub:'ふくろう案内',
@@ -379,7 +380,7 @@ const STR={
   bagTitle:'Food Bag',bagSub:'Food Bag',bagEmpty:'No food yet.\nDefeat monsters to collect food.\nFish drops from monsters like {mob} (common near Stanley beaches).',
   bagHint:'(Give the right food in the right habitat to befriend animals)',bagTotal:'Total {n}',
   canvasExit:'OUT',canvasBack:'BACK',placeBaseHdr:'(Base · Visitor Centre)',placeOutdoorHdr:'({kind})',
-  placeCmdOwl:'🦉 Talk to Owl',placeCmdInfo:'📋 Get Info',placeCmdExit:'🚪 Leave',placePrompt:'What will you do?',
+  placeCmdOwl:'🦉 Talk to Owl',placeCmdOwlMob:'🦉 Owl',placeCmdInfo:'📋 Get Info',placeCmdInfoMob:'📋 Info',placeCmdExit:'🚪 Leave',placeCmdExitMob:'🚪 Leave',placePrompt:'What will you do?',
   placeWelcomeShort:'You arrived at Devonport (base).\nTalk to the owl or read the sign for info.',
   ending1:'Everyone is a friend.',ending2:'Peaceful, beautiful Tasmania has returned.',ending3:'Want PAX as mates?\nGet them here!',endingShop:'🛒 Get PAX here!',endingRetry:'🔄 Play Again',
   owlName:'Owl',owlSub:'Owl Guide',
@@ -973,7 +974,10 @@ function drawFerryBoats(camX,camY){
 
 // ===== place scene (名所＝バトル風レイアウト) =====
 let placeMenu={sel:0},placeBtns=[],placePartyPos=[];
-function getPlaceCmds(){return[t('placeCmdOwl'),t('placeCmdInfo'),t('placeCmdExit')];}
+function getPlaceCmds(){
+  if(isMobileUI())return[t('placeCmdOwlMob'),t('placeCmdInfoMob'),t('placeCmdExitMob')];
+  return[t('placeCmdOwl'),t('placeCmdInfo'),t('placeCmdExit')];
+}
 function choosePlaceCmd(idx){if(idx===0)talkOwl();else if(idx===1)readBoard();else if(idx===2)exitPlace();}
 function placeConfirm(){if(screen!=='place'||overlay)return;choosePlaceCmd(placeMenu.sel);sfx(520,0.05);}
 function placeMove(delta){if(screen!=='place'||overlay)return;const n=getPlaceCmds().length;placeMenu.sel=(placeMenu.sel+delta+n)%n;sfx(420,0.03);}
@@ -991,11 +995,14 @@ function placeKey(e){
   if(k==='arrowup'||k==='w'||k==='arrowleft'||k==='a'){e.preventDefault();placeMove(-1);}
   else if(k==='arrowdown'||k==='s'||k==='arrowright'||k==='d'){e.preventDefault();placeMove(1);}
 }
-function layoutPlaceParty(){
-  const zoneL=W*0.50,zoneR=W-14,zoneT=46,zoneB=H*0.66,MAX_ROWS=5,GAP=3;
-  const zw=zoneR-zoneL,zh=zoneB-zoneT;
-  const sprH=Math.min(68,Math.max(54,Math.floor((zh-GAP*(MAX_ROWS-1))/MAX_ROWS)));
-  const rowStep=sprH+GAP,yBottom=zoneB-sprH*0.04;
+function layoutPlaceParty(panelTop){
+  const mUI=isMobileUI();
+  const zoneL=W*0.50,zoneR=W-14,zoneT=46;
+  const zoneB=(panelTop!=null?panelTop:H*(mUI?0.58:0.66))-12;
+  const MAX_ROWS=5,GAP=3;
+  const zw=zoneR-zoneL,zh=Math.max(50,zoneB-zoneT);
+  const sprH=Math.min(mUI?50:68,Math.max(mUI?36:54,Math.floor((zh-GAP*(MAX_ROWS-1))/MAX_ROWS)));
+  const rowStep=sprH+GAP,yBottom=zoneB-sprH*0.06;
   const colX=[zoneL+zw*0.24,zoneL+zw*0.76],nLeft=Math.ceil(party.length/2);
   placePartyPos=[];
   for(let k=0;k<party.length;k++){const col=k<nLeft?0:1,row=col===0?k:k-nLeft;placePartyPos.push({x:colX[col],y:yBottom-row*rowStep,sprH});}
@@ -1497,8 +1504,8 @@ function renderPlace(){
   drawPlaceSky(id,kind,top,gy);
   drawOutdoorPanorama(id,kind,0,top,W,gy);
   drawPlaceGround(id,kind,gy,uiTop);
-  drawOwl(W*0.22,H*0.56,68);
-  layoutPlaceParty();
+  drawOwl(W*0.22,H*0.56,mUI?58:68);
+  layoutPlaceParty(py);
   for(let k=0;k<placePartyPos.length;k++){
     const pos=placePartyPos[k];
     drawSprite(party[k],pos.x,pos.y,pos.sprH,(Math.sin(timeMS/280+k*0.7)+1)*1.1,false);
@@ -2260,8 +2267,14 @@ function drawIntroClipped(text,x,y,maxw,lh,maxLines){
 function drawPlaceBtn(cx,cy,w,h,label,on){
   ctx.fillStyle=on?'#1c4a86':'#13335e';ctx.fillRect(cx,cy,w,h);
   ctx.strokeStyle=on?'#ffd24a':'#9cd1ff';ctx.lineWidth=on?2.5:1.5;ctx.strokeRect(cx,cy,w,h);
-  ctx.fillStyle=on?'#ffd24a':'#eaf6ff';ctx.font=canvasLabelFont(12,'bold');ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(label,cx+w/2,cy+h/2);
+  ctx.fillStyle=on?'#ffd24a':'#eaf6ff';ctx.textAlign='center';ctx.textBaseline='middle';
+  let fs=isMobileUI()?10:12;
+  ctx.font=canvasLabelFont(fs,'bold');
+  while(fs>8&&ctx.measureText(label).width>w-10){fs--;ctx.font=canvasLabelFont(fs,'bold');}
+  if(ctx.measureText(label).width<=w-10){ctx.fillText(label,cx+w/2,cy+h/2);return;}
+  ctx.textBaseline='alphabetic';
+  wrapText(label,cx+6,cy+Math.max(12,h*0.38),w-12,isMobileUI()?11:12,false);
+  ctx.textBaseline='middle';
 }
 
 // ===== field roaming monsters (PHASE 2b) =====
@@ -2592,6 +2605,7 @@ function applyUI(){
   cntWrap.classList.add('hidden');bagWrap.classList.add('hidden');bJournal.classList.add('hidden');bMode.classList.add('hidden');
   const playing=started&&(screen==='field'||screen==='battle'||screen==='place'||screen==='ferry'||screen==='ending');
   document.body.classList.toggle('play-mode',playing);
+  document.body.dataset.screen=screen||'';
   ov.style.display=dialogOverlayOn()?'flex':'none';
   jrnl.style.display=overlay==='places'?'block':'none';
   cv.style.cursor='default';
@@ -2599,11 +2613,11 @@ function applyUI(){
   else if(screen==='modeselect'){modeselectEl.classList.remove('hidden');}
   else if(screen==='mapmode'){bMode.classList.remove('hidden');cv.style.cursor='pointer';}
   else if(screen==='battle'){
-    padEl.classList.remove('hidden');partyEl.classList.remove('hidden');bagWrap.classList.remove('hidden');
+    padEl.classList.remove('hidden');bagWrap.classList.remove('hidden');
     hintEl.textContent=uiHint('hintBattle');hintEl.classList.remove('hidden');cv.style.cursor='pointer';
   }
   else if(screen==='place'){
-    padEl.classList.remove('hidden');partyEl.classList.remove('hidden');bagWrap.classList.remove('hidden');bJournal.classList.remove('hidden');
+    padEl.classList.remove('hidden');bagWrap.classList.remove('hidden');bJournal.classList.remove('hidden');
     if(isMobileUI()){hintEl.textContent=uiHint('hintPlace');hintEl.classList.remove('hidden');}
     cv.style.cursor='pointer';
   }
