@@ -169,7 +169,11 @@
     .port{width:auto;align-self:center}
     .port img{width:72px;height:72px;}
     .dcol{width:100%;}
-    .dialog .body{font-size:13.5px;line-height:1.65;}
+    .dialog .name{font-size:15px;padding:5px 12px;margin-bottom:8px;}
+    .dialog .en{font-size:13px;}
+    .dialog .body{font-size:17px;line-height:1.72;}
+    .dialog .meibutsu{font-size:15px;line-height:1.65;margin-top:8px;}
+    .dialog .more{font-size:12px;margin-top:10px;}
     .dactions .dact{flex:1 1 120px;min-height:46px;font-size:14px;}
     #journal{
       position:fixed !important;inset:0;z-index:350;width:100vw;height:100dvh;max-height:100dvh;
@@ -2175,7 +2179,7 @@ function battleKey(e){
   else if(k==='arrowdown'||k==='s'||k==='arrowright'||k==='d')battleMove(1);
 }
 let battleBtns=[];
-function battlePanelTop(mUI){return Math.floor(H*(mUI?0.68:0.78));}
+function battlePanelTop(mUI){return Math.floor(H*(mUI?0.66:0.78));}
 function drawBattleHeroHud(mUI){
   const bw=240, bx=W-14-bw, by=14;
   ctx.fillStyle='#06101fcc';ctx.fillRect(bx,by,bw,40);
@@ -2248,10 +2252,14 @@ function renderBattle(){
     const items=battle.phase==='submenu'?ownedFoods():getMainCmds(), sel=battle.phase==='submenu'?battle.foodSel:battle.sel;
     const cols=battle.phase==='submenu'?Math.max(1,Math.min(5,items.length)):3, cw=(W-36)/cols, rh=mUI?34:30, ox0=18;
     const toastLine=(battle.toastUntil&&timeMS<battle.toastUntil)?battle.toast:(battle.introUntil&&timeMS<battle.introUntil?battle.intro:'');
-    const oy0=contentTop+(toastLine?(mUI?24:22):(battle.phase==='menu'&&timeMS>=battle.introUntil&&!battle.fleeing?(mUI?18:16):8));
-    if(toastLine){ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=canvasLabelFont(mUI?13:14);wrapText(toastLine,14,contentTop+4,W-28,mUI?17:19,false);}
-    else if(battle.phase==='menu'&&timeMS>=battle.introUntil&&!battle.fleeing){
-      ctx.fillStyle='#ff8a80';ctx.font=canvasLabelFont(mUI?10:11);ctx.textAlign='left';ctx.fillText(t('battleCornered'),14,contentTop+4);
+    const msgFs=mUI?16:14, msgLh=mUI?22:19, cornerFs=mUI?13:11;
+    let oy0=contentTop+8;
+    if(toastLine){
+      ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=canvasLabelFont(msgFs);
+      oy0=wrapText(toastLine,14,contentTop+4,W-28,msgLh,false)+(mUI?10:8);
+    }else if(battle.phase==='menu'&&timeMS>=battle.introUntil&&!battle.fleeing){
+      ctx.fillStyle='#ff8a80';ctx.font=canvasLabelFont(cornerFs);ctx.textAlign='left';ctx.fillText(t('battleCornered'),14,contentTop+4);
+      oy0=contentTop+(mUI?22:16);
     }
     const atkWait=timeMS<battle.partyCd;
     const cmdFs=mUI?15:14;
@@ -2266,10 +2274,10 @@ function renderBattle(){
     if(battle.phase==='submenu'&&!mUI){ctx.fillStyle='#cfe9ff';ctx.font=canvasLabelFont(11);ctx.fillText(t('battleFoodSub'),14,H-8);}
   }else if(battle.fleeing||battle.phase==='win'){
     const toastLine=(battle.toastUntil&&timeMS<battle.toastUntil)?battle.toast:'';
-    if(toastLine){ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=canvasLabelFont(mUI?13:14);wrapText(toastLine,14,contentTop+6,W-28,mUI?18:20,false);}
+    if(toastLine){ctx.textAlign='left';ctx.fillStyle='#fff';ctx.font=canvasLabelFont(mUI?16:14);wrapText(toastLine,14,contentTop+6,W-28,mUI?22:20,false);}
   }
 }
-function wrapText(text,x,y,maxw,lh,brand){const chars=(text||'').split('');let line='',yy=y;const flush=ln=>{if(!ln)return;brand?fillBrandLine(ln,x,yy):ctx.fillText(ln,x,yy);};for(let i=0;i<chars.length;i++){const test=line+chars[i];if(ctx.measureText(test).width>maxw&&line){flush(line);line=chars[i];yy+=lh;}else line=test;}flush(line);}
+function wrapText(text,x,y,maxw,lh,brand){const chars=(text||'').split('');let line='',yy=y;const flush=ln=>{if(!ln)return;brand?fillBrandLine(ln,x,yy):ctx.fillText(ln,x,yy);};for(let i=0;i<chars.length;i++){const test=line+chars[i];if(ctx.measureText(test).width>maxw&&line){flush(line);line=chars[i];yy+=lh;}else line=test;}flush(line);return yy;}
 function drawIntroClipped(text,x,y,maxw,lh,maxLines){
   ctx.fillStyle='#cfe9ff';ctx.font=canvasLabelFont(13);
   let yy=y,n=0;
